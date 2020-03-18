@@ -1,22 +1,21 @@
 const express = require('express')
-const bodyParser = require ('body-parser');
+const bodyParser = require('body-parser');
 const app = express();
-const request = require('request');
 const axios = require("axios");
-app.use(bodyParser.urlencoded({extended: true}));
+const path = require("path");
+app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 
-
-
 app.post("/", function (req, res) {
 
-	let currency = req.body.currency;
+	let country = req.body.country;
 
 	axios
-		.get(`https://restcountries.eu/rest/v2/name/${currency}?fullText=true`)
+		.get(`https://restcountries.eu/rest/v2/name/${country}?fullText=true`)
 		.then(response => {
 
 			res.render("index", {
@@ -42,13 +41,22 @@ app.get("/", function (req, res) {
 		pageTest: "Page Test",
 		path: "",
 		data: {
-			name: null
+			name: null,
+			topLevelDomain: null,
+			capital: null,
+			region: null,
+			subregion: null,
+			population: null,
+			timezones: null,
+			demonym: null,
+			currencies: null,
+			flag: null
 		}
 	});
 });
 
 
- 
-app.listen(3000, ()=>{
-    console.log("Server is running on Port 3000");
-})
+
+app.listen(process.env.PORT || 3000, () => {
+	console.log("Server has started");
+});
